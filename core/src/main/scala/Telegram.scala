@@ -42,6 +42,11 @@ object Telegram {
         Http(urlFor("forwardMessage")).params(p.toMap).asString
     }
 
+    def sendChatAction(chatId: Int, action: String)
+    {
+        Http(urlFor("sendChatAction")).params(Map("chat_id" -> chatId.toString, "action" -> action)).asString
+    }
+
     def sendPhoto(chatId: Int, imgPath: String, replyTo: Int = -1) = {
         val imgType = typeOf(imgPath)
         val isGif = imgType == "image/gif"

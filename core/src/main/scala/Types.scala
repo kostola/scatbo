@@ -67,6 +67,7 @@ class Message(mid: Int, f: User, d: Int, t: String, uChat: User, gChat: GroupCha
     def belongsToGroup = groupChat != null
 
     def chatId = if (belongsToUser) userChat.id else if (belongsToGroup) groupChat.id else 0
+    def chatName = if (belongsToUser) userChat.fullName else if (belongsToGroup) groupChat.title else ""
 
     def isCommand(cmd: String): Boolean =
     {

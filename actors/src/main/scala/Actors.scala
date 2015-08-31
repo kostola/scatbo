@@ -34,38 +34,43 @@ class UpdatesActor(delay: Int) extends Actor
 
     def receive = {
         case StartCheckingForUpdates => {
-            Logger.log("StartPollingUpdates")
             import context.dispatcher
             context.system.scheduler.schedule(0 seconds, delay seconds, self, CheckForUpdates)
         }
         case CheckForUpdates => {
-            Logger.log("CheckForUpdates")
-            val rspUpdate = Telegram.getUpdates(offset)
-            Logger.log("" + rspUpdate.code)
+            try {
+                val rspUpdate = Telegram.getUpdates(offset)
 
-            if (rspUpdate.is2xx) {
-                val astUpdate = JsonParser(rspUpdate.body).asJsObject 
+                if (rspUpdate.is2xx) {
+                    val astUpdate = JsonParser(rspUpdate.body).asJsObject 
 
-                val isValid: Boolean = astUpdate.getFields("ok")(0).convertTo[Boolean]
-                if (isValid) {
-                    val result: Vector[JsValue] = astUpdate.getFields("result")(0).convertTo[JsArray].elements
-                    for (i <- 0 until result.length) {
-                        val update: JsObject = result(i).asJsObject
-                        val updateId: Integer = update.getFields("update_id")(0).convertTo[Double].toInt
-                        offset = updateId + 1
-                        val message: JsObject = update.getFields("message")(0).asJsObject
-                        try {
-                            parseMessage(message)
-                        } catch {
-                            case e: Exception => {
-                                Logger.log(message.prettyPrint)
-                                e.printStackTrace()
+                    val isValid: Boolean = astUpdate.getFields("ok")(0).convertTo[Boolean]
+                    if (isValid) {
+                        val result: Vector[JsValue] = astUpdate.getFields("result")(0).convertTo[JsArray].elements
+                        for (i <- 0 until result.length) {
+                            val update: JsObject = result(i).asJsObject
+                            val updateId: Integer = update.getFields("update_id")(0).convertTo[Double].toInt
+                            offset = updateId + 1
+                            val message: JsObject = update.getFields("message")(0).asJsObject
+                            try {
+                                parseMessage(message)
+                            } catch {
+                                case e: Exception => {
+                                    Logger.log(message.prettyPrint)
+                                    e.printStackTrace()
+                                }
                             }
                         }
                     }
+                } else {
+                    Logger.log("Error while checking for updates")
+                    Logger.log(rspUpdate.body)
                 }
-            } else {
-                Logger.log(rspUpdate.body)
+            } catch {
+                case e: Exception => {
+                    Logger.log("Exception while checking for updates")
+                    e.printStackTrace()
+                }
             }
         }
         case SubscribeForCommand(c) => {
@@ -81,9 +86,6 @@ class UpdatesActor(delay: Int) extends Actor
     private def parseMessage(message: JsObject): Unit =
     {
         val msg = message.convertTo[Message]
-
-        Logger.log("Recv msg " + msg.text)
-        Logger.log("Subscriptions size: " + subscriptions.size)
 
         subscriptions.foreach { 
             case (command, actors) => {
