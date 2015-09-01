@@ -156,7 +156,7 @@ object TelegramProtocol extends DefaultJsonProtocol
                 case e: Exception => {}
             }    
 
-            new Message(id, from, date, text, uChat, gChat)
+            Message(id, from, date, uChat, gChat, text = text)
         }   
     }
 }

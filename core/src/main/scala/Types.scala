@@ -34,7 +34,7 @@ class User(uid: Int, fn: String, ln: String, un: String)
 
 object User
 {
-    def apply(userId: Int, firstName: String, lastName: String, username: String): User =
+    def apply(userId: Int, firstName: String, lastName: String = null, username: String = null): User =
         new User(userId, firstName, lastName, username)
 }
 
@@ -54,14 +54,54 @@ object GroupChat
 
 // ----- Message
 
-class Message(mid: Int, f: User, d: Int, t: String, uChat: User, gChat: GroupChat)
+class Message( mid: Int,
+               f: User,
+               d: Int,
+               uChat: User,
+               gChat: GroupChat,
+               fwdFrom: User,
+               repToMsg: Message,
+               txt: String,
+               au: Audio,
+               doc: Document,
+               ph: List[PhotoSize],
+               st: Sticker,
+               vi: Video,
+               vo: Voice,
+               ca: String,
+               co: Contact,
+               loc: Location,
+               newChPrt: User,
+               leftChPrt: User,
+               newChTit: String,
+               newChPh: List[PhotoSize],
+               delChPh: Boolean,
+               gChCrtd: Boolean
+             )
 {
-    val id: Int              = mid
-    val from: User           = f
-    val date: Int            = d
-    val userChat: User       = uChat
+    val id: Int = mid
+    val from: User = f
+    val date: Int = d
+    val userChat: User = uChat 
     val groupChat: GroupChat = gChat
-    val text: String         = t
+    val forwardFrom: User = fwdFrom
+    val replyToMessage: Message = repToMsg
+    val text: String = txt
+    val audio: Audio = au
+    val document: Document = doc
+    val photo: List[PhotoSize] = ph
+    val sticker: Sticker = st
+    val video: Video = vi
+    val voice: Voice = vo
+    val caption: String = ca
+    val contact: Contact = co
+    val location: Location = loc
+    val newChatParticipant: User = newChPrt
+    val leftChatParticipant: User = leftChPrt
+    val newChatTitle: String = newChTit
+    val newChatPhoto: List[PhotoSize] = newChPh
+    val deleteChatPhoto: Boolean = delChPh
+    val groupChatCreated: Boolean = gChCrtd
 
     def belongsToUser = userChat != null
     def belongsToGroup = groupChat != null
@@ -89,8 +129,55 @@ class Message(mid: Int, f: User, d: Int, t: String, uChat: User, gChat: GroupCha
 
 object Message
 {
-    def apply(messageId: Int, from: User, date: Int, text: String, userChat: User, groupChat: GroupChat): Message =
-        new Message(messageId, from, date, text, userChat, groupChat)
+    def apply( messageId: Int,
+               from: User,
+               date: Int,
+               userChat: User = null,
+               groupChat: GroupChat = null,
+               forwardFrom: User = null,
+               replyToMessage: Message = null,
+               text: String = null,
+               audio: Audio = null,
+               document: Document = null,
+               photo: List[PhotoSize] = null,
+               sticker: Sticker = null,
+               video: Video = null,
+               voice: Voice = null,
+               caption: String = null,
+               contact: Contact = null,
+               location: Location = null,
+               newChatParticipant: User = null,
+               leftChatParticipant: User = null,
+               newChatTitle: String = null,
+               newChatPhoto: List[PhotoSize] = null,
+               deleteChatPhoto: Boolean = false,
+               groupChatCreated: Boolean = false
+             ): Message =
+        new Message(
+               messageId,
+               from,
+               date,
+               userChat,
+               groupChat,
+               forwardFrom,
+               replyToMessage,
+               text,
+               audio,
+               document,
+               photo,
+               sticker,
+               video,
+               voice,
+               caption,
+               contact,
+               location,
+               newChatParticipant,
+               leftChatParticipant,
+               newChatTitle,
+               newChatPhoto,
+               deleteChatPhoto,
+               groupChatCreated
+             )
 }
 
 // ----- Others
