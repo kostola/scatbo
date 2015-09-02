@@ -180,14 +180,138 @@ object Message
              )
 }
 
+// ----- PhotoSize
+
+class PhotoSize(fid: String, w: Int, h: Int, fs: Integer)
+{
+    val fileId: String = fid
+    val width: Int = w
+    val height: Int = h
+    val fileSize: Int = fs
+}
+
+object PhotoSize
+{
+    def apply(fileId: String, width: Int, height: Int, fileSize: Int = -1) =
+        new PhotoSize(fileId, width, height, fileSize)
+}
+
+// ----- Audio
+
+class Audio(fid: String, d: Int, p: String, t: String, mt: String, fs: Int)
+{
+    val fileId: String = fid
+    val duration: Int = d
+    val performer: String = p
+    val title: String = t
+    val mimeType: String = mt
+    val fileSize: Int = fs
+}
+
+object Audio
+{
+    def apply( fileId: String,
+               duration: Int,
+               performer: String = null,
+               title: String = null,
+               mimeType: String = null,
+               fileSize: Int = -1
+             ) =
+        new Audio(fileId, duration, performer, title, mimeType, fileSize)
+}
+
+// ----- Document
+
+class Document(fid: String, t: PhotoSize, fn: String, mt: String, fs: Int)
+{
+    val fileId: String = fid
+    val thumb: PhotoSize = t
+    val fileName: String = fn
+    val mimeType: String = mt
+    val fileSize: Int = fs
+}
+
+object Document
+{
+    def apply( fileId: String,
+               thumb: PhotoSize = null,
+               fileName: String = null,
+               mimeType: String = null,
+               fileSize: Int = -1
+             ) =
+        new Document(fileId, thumb, fileName, mimeType, fileSize)
+}
+
+// ----- Sticker
+
+class Sticker(fid: String, w: Int, h: Int, t: PhotoSize, fs: Int)
+{
+    val fileId: String = fid
+    val width: Int = w
+    val height: Int = h
+    val thumb: PhotoSize = t
+    val fileSize: Int = fs
+}
+
+object Sticker
+{
+    def apply( fileId: String,
+               width: Int,
+               height: Int,
+               thumb: PhotoSize = null,
+               fileSize: Int = -1
+             ) =
+        new Sticker(fileId, width, height, thumb, fileSize)
+}
+
+// ----- Video
+
+class Video(fid: String, w: Int, h: Int, d: Int, t: PhotoSize, mt: String, fs: Int)
+{
+    val fileId: String = fid
+    val width: Int = w
+    val height: Int = h
+    val duration: Int = d
+    val thumb: PhotoSize = t
+    val mimeType: String = mt
+    val fileSize: Int = fs 
+}
+
+object Video
+{
+    def apply( fileId: String,
+               width: Int,
+               height: Int,
+               duration: Int,
+               thumb: PhotoSize = null,
+               mimeType: String = null,
+               fileSize: Int = -1 
+             ) =
+        new Video(fileId, width, height, duration, thumb, mimeType, fileSize)
+}
+
+// ----- Voice
+
+class Voice(fid: String, d: Int, mt: String, fs: Int)
+{
+    val fileId: String = fid
+    val duration: Int = d
+    val mimeType: String = mt
+    val fileSize: Int = fs 
+}
+
+object Voice
+{
+    def apply( fileId: String,
+               duration: Int,
+               mimeType: String = null,
+               fileSize: Int = -1 
+             ) =
+        new Voice(fileId, duration, mimeType, fileSize)
+}
+
 // ----- Others
 
-class PhotoSize()
-class Audio()
-class Document()
-class Sticker()
-class Video()
-class Voice()
 class Contact()
 class Location()
 class Update()
