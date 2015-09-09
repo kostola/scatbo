@@ -82,6 +82,6 @@ object Telegram {
         Http(urlFor(apiCmd))
             .params(p.toMap)
             .postMulti(MultiPart(fileParName, fileName, fileType, fileBytes))
-            .asString 
+            .asString
     }
 }

@@ -28,19 +28,19 @@ import spray.json._
 object TelegramProtocol extends DefaultJsonProtocol
 {
     implicit object UserJsonFormat extends RootJsonFormat[User] {
-        def write(u: User) = {
+        def write(u: User): JsObject = {
             val objMap = collection.mutable.Map(
                 "id" -> JsNumber(u.id),
                 "first_name" -> JsString(u.firstName)
             )
-            
+
             if (u.lastName != null) objMap += ( "last_name" -> JsString(u.lastName) )
             if (u.username != null) objMap += ( "username" -> JsString(u.username) )
 
             JsObject(objMap.toMap)
         }
 
-        def read(value: JsValue) = {
+        def read(value: JsValue): User = {
             val fromObj = value.asJsObject()
 
             var id: Int = 0
@@ -67,20 +67,20 @@ object TelegramProtocol extends DefaultJsonProtocol
                 }
             } catch {
                 case e: Exception => {}
-            }            
+            }
 
             User(id, firstName, lastName, username)
         }
     }
 
     implicit object GroupChatJsonFormat extends RootJsonFormat[GroupChat] {
-        def write(g: GroupChat) =
+        def write(g: GroupChat): JsObject =
             JsObject(Map(
                 "id" -> JsNumber(g.id),
                 "title" -> JsString(g.title)
             ))
 
-        def read(value: JsValue) = {
+        def read(value: JsValue): GroupChat = {
             val fromObj = value.asJsObject()
 
             var id: Int = 0
@@ -95,20 +95,66 @@ object TelegramProtocol extends DefaultJsonProtocol
                 }
             } catch {
                 case e: Exception => {}
-            }            
+            }
 
             GroupChat(id, title)
         }
     }
 
+    implicit object PhotoSizeJsonFormat extends RootJsonFormat[PhotoSize] {
+        def write(p: PhotoSize): JsObject = {
+            val objMap = collection.mutable.Map(
+                "file_id" -> JsString(p.fileId),
+                "width" -> JsNumber(p.width),
+                "height" -> JsNumber(p.height)
+            )
+
+            if (p.fileSize > 0) objMap += ( "file_size" -> JsNumber(p.fileSize) )
+
+            JsObject(objMap.toMap)
+        }
+
+        def read(value: JsValue): PhotoSize = {
+            val fromObj = value.asJsObject()
+
+            var fileId: String = ""
+            var width: Int = -1
+            var height: Int = -1
+            var fileSize: Int = -1
+
+            try {
+                fileId = fromObj.getFields("file_id")(0).convertTo[String]
+                try {
+                    width = fromObj.getFields("width")(0).convertTo[Int]
+                } catch {
+                    case e: Exception => {}
+                }
+                try {
+                    height = fromObj.getFields("height")(0).convertTo[Int]
+                } catch {
+                    case e: Exception => {}
+                }
+                try {
+                    fileSize = fromObj.getFields("file_size")(0).convertTo[Int]
+                } catch {
+                    case e: Exception => {}
+                }
+            } catch {
+                case e: Exception => {}
+            }
+
+            PhotoSize(fileId, width, height, fileSize)
+        }
+    }
+
     implicit object MessageJsonFormat extends RootJsonFormat[Message] {
-        def write(m: Message) = {
+        def write(m: Message): JsObject = {
             val objMap = collection.mutable.Map(
                 "message_id" -> JsNumber(m.id),
                 "date" -> JsNumber(m.date),
                 "from" -> m.from.toJson
             )
-            
+
             if (m.userChat != null) objMap += ( "chat " -> m.userChat.toJson )
             else if (m.groupChat != null) objMap += ( "chat" -> m.groupChat.toJson )
 
@@ -117,7 +163,7 @@ object TelegramProtocol extends DefaultJsonProtocol
             JsObject(objMap.toMap)
         }
 
-        def read(value: JsValue) = {
+        def read(value: JsValue): Message = {
             val fromObj = value.asJsObject()
 
             var id: Int = 0
@@ -126,6 +172,7 @@ object TelegramProtocol extends DefaultJsonProtocol
             var from: User = null
             var uChat: User = null
             var gChat: GroupChat = null
+            var photo: List[PhotoSize] = null
 
             try {
                 id = fromObj.getFields("message_id")(0).convertTo[Int]
@@ -152,11 +199,17 @@ object TelegramProtocol extends DefaultJsonProtocol
                 } else {
                     uChat = fromObj.getFields("chat")(0).convertTo[User]
                 }
+
+                try {
+                    photo = fromObj.getFields("photo")(0).convertTo[JsArray].elements.toList.map(_.convertTo[PhotoSize])
+                } catch {
+                    case e: Exception => {}
+                }
             } catch {
                 case e: Exception => {}
-            }    
+            }
 
-            Message(id, from, date, uChat, gChat, text = text)
-        }   
+            Message(id, from, date, uChat, gChat, text = text, photo = photo)
+        }
     }
 }

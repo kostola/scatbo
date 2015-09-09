@@ -42,7 +42,7 @@ class UpdatesActor(delay: Int) extends Actor
                 val rspUpdate = Telegram.getUpdates(offset)
 
                 if (rspUpdate.is2xx) {
-                    val astUpdate = JsonParser(rspUpdate.body).asJsObject 
+                    val astUpdate = JsonParser(rspUpdate.body).asJsObject
 
                     val isValid: Boolean = astUpdate.getFields("ok")(0).convertTo[Boolean]
                     if (isValid) {
@@ -87,7 +87,7 @@ class UpdatesActor(delay: Int) extends Actor
     {
         val msg = message.convertTo[Message]
 
-        subscriptions.foreach { 
+        subscriptions.foreach {
             case (command, actors) => {
                 if (msg.isCommand(command)) {
                     actors.foreach {
@@ -114,7 +114,7 @@ class MessageActor extends Actor
             } else {
                 Logger.log("Message belongs to nobody")
             }
-            
+
             Logger.log(msg.text)
         }
     }

@@ -82,7 +82,7 @@ class Message( mid: Int,
     val id: Int = mid
     val from: User = f
     val date: Int = d
-    val userChat: User = uChat 
+    val userChat: User = uChat
     val groupChat: GroupChat = gChat
     val forwardFrom: User = fwdFrom
     val replyToMessage: Message = repToMsg
@@ -117,12 +117,12 @@ class Message( mid: Int,
         val botUser = Telegram.botUser
 
         if (text.equals(strCmd) || text.startsWith(strCmd + " ")) return true
-        
+
         if (!botUser.isEmpty()) {
             val strCmdFull = strCmd + "@" + botUser
             if (text.equals(strCmdFull) || text.startsWith(strCmdFull + " ")) return true
         }
-        
+
         return false
     }
 }
@@ -274,7 +274,7 @@ class Video(fid: String, w: Int, h: Int, d: Int, t: PhotoSize, mt: String, fs: I
     val duration: Int = d
     val thumb: PhotoSize = t
     val mimeType: String = mt
-    val fileSize: Int = fs 
+    val fileSize: Int = fs
 }
 
 object Video
@@ -285,7 +285,7 @@ object Video
                duration: Int,
                thumb: PhotoSize = null,
                mimeType: String = null,
-               fileSize: Int = -1 
+               fileSize: Int = -1
              ) =
         new Video(fileId, width, height, duration, thumb, mimeType, fileSize)
 }
@@ -297,7 +297,7 @@ class Voice(fid: String, d: Int, mt: String, fs: Int)
     val fileId: String = fid
     val duration: Int = d
     val mimeType: String = mt
-    val fileSize: Int = fs 
+    val fileSize: Int = fs
 }
 
 object Voice
@@ -305,7 +305,7 @@ object Voice
     def apply( fileId: String,
                duration: Int,
                mimeType: String = null,
-               fileSize: Int = -1 
+               fileSize: Int = -1
              ) =
         new Voice(fileId, duration, mimeType, fileSize)
 }
