@@ -310,13 +310,29 @@ object Voice
         new Voice(fileId, duration, mimeType, fileSize)
 }
 
-// ----- Others
 
-class Contact()
-class Location()
-class Update()
-class InputFile()
-class UserProfilePhotos()
-class ReplyKeyboardMarkup()
-class ReplyKeyboardHide()
-class ForceReply()
+case class Contact(phoneNumber: String, firstName: String, lastName: Option[String] = None, userId: Option[Int] = None)
+
+case class Location(longitude: Double, latitude: Double)
+
+class Update(updateId: Int, message: Option[Message] = None)
+
+//class InputFile()
+
+case class UserProfilePhotos(totalCount: Int, photos: List[PhotoSize])
+
+case class File(fileId: String, fileSize: Option[Integer] = None, filePath: Option[String] = None)
+{
+    def fileUrl(botToken: String) = filePath match {
+        case Some(path) => {
+            Some[String]("https://api.telegram.org/file/bot" + botToken + "/" + path)
+        }
+        case None => None
+    }
+}
+
+case class ReplyKeyboardMarkup(keyboard: List[List[String]], resize: Option[Boolean] = None, oneTime: Option[Boolean] = None, selective: Option[Boolean] = None)
+
+case class ReplyKeyboardHide(selective: Option[Boolean] = None)
+
+case class ForceReply(selective: Option[Boolean] = None)
