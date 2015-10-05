@@ -6,7 +6,7 @@ val depAkka   = "com.typesafe.akka" %% "akka-actor" % "2.3.12"
 // Common settings
 lazy val commonSettings = Seq(
   organization := "me.alecosta",
-  version      := "0.1.0",
+  version      := "0.2.0",
   scalaVersion := "2.11.7"
 )
 

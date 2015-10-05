@@ -108,14 +108,23 @@ class MessageActor extends Actor
             Logger.log("Received message from " + msg.from.firstName + " " + msg.from.lastName)
 
             if (msg.belongsToUser) {
-                Logger.log("Message belongs to user " + msg.userChat.firstName + " " + msg.userChat.lastName)
+                Logger.log("Message belongs to user " + (msg.userChat match {
+                    case Some(value) => value.fullName
+                    case None => "[UNKNOWN]"
+                }))
             } else if (msg.belongsToGroup) {
-                Logger.log("Message belongs to group " + msg.groupChat.title)
+                Logger.log("Message belongs to user " + (msg.groupChat match {
+                    case Some(value) => value.title
+                    case None => "[UNKNOWN]"
+                }))
             } else {
                 Logger.log("Message belongs to nobody")
             }
 
-            Logger.log(msg.text)
+            msg.text match {
+                case Some(value) => Logger.log(value)
+                case _ =>
+            }
         }
     }
 }
